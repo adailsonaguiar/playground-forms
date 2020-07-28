@@ -5,8 +5,8 @@ import { useFormValidator } from './hooks/form-validator';
 function App() {
   const formValidator = useFormValidator({
     initialValues: {
-      userEmail: 'adailsonacj@live.com',
-      userPassword: '123456',
+      userEmail: '',
+      userPassword: '',
     },
     validate: function (values) {
       const errors = {};
@@ -20,17 +20,23 @@ function App() {
       <form>
         <div className="formField">
           <input
-            className={formValidator.errors.userEmail && 'invalid'}
+            className={
+              formValidator.errors.userEmail &&
+              formValidator.touched.userEmail &&
+              'invalid'
+            }
             type="text"
             name="userEmail"
             value={formValidator.values.userEmail}
             onChange={formValidator.handleChange}
+            onBlur={formValidator.handleBlur}
           />
-          {formValidator.errors.userEmail && (
-            <span className="invalid-feedback">
-              {formValidator.errors.userEmail}
-            </span>
-          )}
+          {formValidator.touched.userEmail &&
+            formValidator.errors.userEmail && (
+              <span className="invalid-feedback">
+                {formValidator.errors.userEmail}
+              </span>
+            )}
         </div>
         <input
           type="password"
@@ -38,9 +44,12 @@ function App() {
           value={formValidator.values.userPassword}
           onChange={formValidator.handleChange}
         />
-        {/* {formValidator.errors.userEmail && (
-          <span className="invalid-feedback">This field is required</span>
-        )} */}
+        {formValidator.touched.userPassword &&
+          formValidator.errors.userPassword && (
+            <span className="invalid-feedback">
+              {formValidator.errors.userPassword}
+            </span>
+          )}
         <button type="submit">PRÓXIMO</button>
       </form>
     </div>

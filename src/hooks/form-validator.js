@@ -1,18 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function useFormValidator({ initialValues, validate }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
+  const [touched, setTouchedField] = useState({});
+
+  useEffect(() => {
+    validateValues(values);
+  }, [values]);
+
   function handleChange(e) {
     const fieldName = e.target.getAttribute('name');
     const value = e.target.value;
-    const newValues = { ...values, [fieldName]: value };
-    setValues(newValues);
-    validateValues(newValues);
+    setValues({ ...values, [fieldName]: value });
+  }
+
+  function handleBlur(e) {
+    const fieldName = e.target.getAttribute('name');
+    setTouchedField({ ...touched, [fieldName]: true });
   }
 
   function validateValues(values) {
-    console.log('validando...', validate(values));
     setErrors(validate(values));
   }
 
@@ -21,5 +29,7 @@ export function useFormValidator({ initialValues, validate }) {
     values,
     errors,
     setErrors,
+    touched,
+    handleBlur,
   };
 }
